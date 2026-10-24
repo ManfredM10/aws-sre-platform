@@ -8,3 +8,8 @@
   Tested 7 regions → only us-east-2 allowed. Root cause: org SCP restricting regions.
 - **Understood:** public = route to IGW + public IP. SG remembers connections (stateful).
   Keys answer *who*; routes answer *where*. Explicit deny always wins.
+
+## Week 2 — prep
+- **Secret found in a public repo:** Slack webhook URL hardcoded in alertmanager config (restaurant-simulation-API).
+  Revoked it in Slack (the step that actually closes it — it remains in git history), replaced it with a placeholder,
+  untracked a committed venv. Lesson: secrets come from a secret store or env var (Alertmanager supports `api_url_file`), never the repo.
