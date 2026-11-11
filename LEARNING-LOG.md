@@ -13,3 +13,12 @@
 - **Secret found in a public repo:** Slack webhook URL hardcoded in alertmanager config (restaurant-simulation-API).
   Revoked it in Slack (the step that actually closes it — it remains in git history), replaced it with a placeholder,
   untracked a committed venv. Lesson: secrets come from a secret store or env var (Alertmanager supports `api_url_file`), never the repo.
+
+## 2026-11-10 — Unknown EC2 instance found during pre-flight check
+- Detect: pre-flight check showed a running t3.micro not in my lab inventory.
+- Investigate: CloudTrail RunInstances on 2026-10-27 (my own console test). Default VPC,
+  SG launch-wizard-1 (console wizard), public IP, SSH key, no IAM role.
+- Evidence: 1,534 "Invalid user" SSH attempts in 14 days; top 5 source IPs = 80% of attempts.
+- Contain/Eradicate: terminated the instance, deleted the SG, verified no Elastic IPs left.
+- Lesson: ClickOps resources drift outside the design and get attacked within hours.
+  From Lab 1 on, everything is built with Terraform; admin access goes through SSM, not port 22.
