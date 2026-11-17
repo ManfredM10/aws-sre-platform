@@ -24,3 +24,11 @@ a route to the IGW and a public IP.
 
 **Lessons:** IAM roles over long-lived keys; SG is stateful, NACL is not;
 an explicit Deny in an SCP overrides AdministratorAccess (diagnosed a region-restriction SCP).
+
+## Week 2 — Compute, load balancing, private database, alerting
+
+Containerized API on EC2 (bootstrapped by user-data, IMDSv2, SSM-only access) behind an ALB with
+health checks; RDS PostgreSQL in private subnets; chained security groups (internet -> ALB -> app -> DB);
+CloudWatch alarm on unhealthy targets -> SNS email. Game day: stopped the container remotely with
+`ssm send-command`, saw the ALB return 502 (fail open), got the ALARM and OK emails, recovered in seconds.
+Everything torn down and verified. Details and evidence: [week2/README.md](week2/README.md).

@@ -22,3 +22,14 @@
 - Contain/Eradicate: terminated the instance, deleted the SG, verified no Elastic IPs left.
 - Lesson: ClickOps resources drift outside the design and get attacked within hours.
   From Lab 1 on, everything is built with Terraform; admin access goes through SSM, not port 22.
+
+## 2026-11-16 — Week 2: ALB + EC2 + RDS + alerting, and a game day
+- Built: EC2 bootstrapped by user-data (Docker build of my API, ready in ~86 s), ALB + target group
+  (health check /menu), private RDS PostgreSQL, CloudWatch alarm on UnHealthyHostCount -> SNS email.
+- Verified the security chain: direct :5000 blocked; RDS resolves to a private IP, :5432 blocked from my
+  laptop and open from the app instance. Admin access only through SSM (no port 22, no keys).
+- Game day: `ssm send-command docker stop` -> expected 503, got 502. With all targets unhealthy the ALB
+  fails open; 503 only means no registered targets. ALARM and OK emails both arrived.
+- Teardown: `ResourceInUse` deleting the target group right after the ALB = eventual consistency.
+  Checked LoadBalancerArns was empty and retried. Verified nothing left running.
+- Finding to fix in Lab 1: /metrics is reachable through the ALB.
