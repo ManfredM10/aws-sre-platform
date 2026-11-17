@@ -92,7 +92,10 @@ In production it would live in a secret store (AWS Secrets Manager).
 
 ![Recovery: back to HTTP 200](img/game-day-recovery.png)
 
-Both emails arrived: `ALARM` when the target went unhealthy and `OK` after recovery.
+Both emails arrived: `ALARM` when the target went unhealthy and `OK` after recovery
+(the recovery email shows the full cycle, `State Change: ALARM -> OK`):
+
+![CloudWatch OK email after recovery: ALARM -> OK](img/alarm-ok-email.png)
 
 **Prediction vs reality:** I expected **503**, but got **502**.
 With *all* targets unhealthy, the ALB **fails open** and keeps routing to them, so a stopped
